@@ -1,0 +1,17 @@
+<div class="row clearfix">
+  <div class="pull-right">
+    <div class="form-group">
+      <select class="form-control" [(ngModel)]="timeRange">
+        <option value="last12hours">Last 12 hours</option>
+        <option value="last1day">Last 1 day</option>
+        <option value="last10days">Last 10 days</option>
+        <option value="last30days">Last 30 days</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row clearfix">
+  <div class="pull-right">
+    <button type="button" class="btn btn-primary" (click)="submit()">Generate CSV</button>
+  </div>
+</div>

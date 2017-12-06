@@ -10,13 +10,17 @@ import { AuthenticationService } from './login/authentication.service';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth.guard';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { QueryComponent } from './query/query.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    SidebarComponent,
+    QueryComponent
   ],
   imports: [
     BrowserModule,
