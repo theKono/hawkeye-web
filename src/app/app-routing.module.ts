@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { LoginComponent } from "./login/login.component";
+import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forRoot([
-      { path: 'login', component: LoginComponent }
+      { path: 'login', component: LoginComponent },
+      { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: '**', redirectTo: '/' }
     ])
   ],
   exports: [
