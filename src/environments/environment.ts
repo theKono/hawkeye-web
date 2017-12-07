@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: '/api'
+  apiUrl: 'http://54.64.85.241/eagle_eye'
 };

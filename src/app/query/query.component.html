@@ -1,45 +1,40 @@
-<div class="row clearfix">
-  <div class="pull-right">
-    <div class="form-group">
-      <select class="form-control" [(ngModel)]="timeRange">
-        <option value="last12hours">Last 12 hours</option>
-        <option value="last1day">Last 1 day</option>
-        <option value="last10days">Last 10 days</option>
-        <option value="last30days">Last 30 days</option>
-      </select>
-    </div>
+<div class="row">
+  <div class="col-md-4 col-md-push-5">
+      <input type="datetime-local" class="form-control" [(ngModel)]="begin_at">
+  </div>
+  <div class="col-md-2 col-md-push-5">
+    <select class="form-control" [(ngModel)]="interval">
+      <option value="10800">3 hours</option>
+      <option value="43200">12 hours</option>
+      <option value="86400">1 day</option>
+      <option value="259200">3 days</option>
+      <option value="604800">7 days</option>
+    </select>
   </div>
 </div>
+<br>
 <div class="row">
-  <div class="col-md-4 col-md-push-2">
+  <div class="col-md-5 col-md-push-1">
     <div class="panel panel-default">
       <div class="panel-heading">Available fields</div>
       <div class="panel-body">
-        <div class="row">
-          <div class="col-md-8 col-md-push-2">
-            <button class="btn btn-default btn-block"
-                    *ngFor="let field of fields"
-                    (click)="add(field)">
-              {{field}}
-            </button>
-          </div>
-        </div>
+        <button class="btn btn-default btn-block"
+                *ngFor="let field of fields"
+                (click)="add(field)">
+          {{field}}
+        </button>
       </div>
     </div>
   </div>
-  <div class="col-md-4 col-md-push-2">
+  <div class="col-md-5 col-md-push-1">
     <div class="panel panel-info">
       <div class="panel-heading">Selected fields</div>
       <div class="panel-body">
-        <div class="row">
-          <div class="col-md-8 col-md-push-2">
-            <button class="btn btn-info btn-block"
-                    *ngFor="let field of selectedFields"
-                    (click)="remove(field)">
-              {{field}}
-            </button>
-          </div>
-        </div>
+        <button class="btn btn-info btn-block"
+                *ngFor="let field of selectedFields"
+                (click)="remove(field)">
+          {{field}}
+        </button>
       </div>
     </div>
   </div>
@@ -48,4 +43,9 @@
   <div class="pull-right">
     <button type="button" class="btn btn-primary" (click)="submit()">Generate CSV</button>
   </div>
+</div>
+<div class="row" *ngIf="link">
+  <hr>
+  <span>Done! Download file here</span>
+  <a [href]="link" class="btn btn-success">Download</a>
 </div>

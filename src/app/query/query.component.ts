@@ -1,27 +1,45 @@
 import { Component, OnInit } from '@angular/core';
+import { QueryService } from './query.service';
 
 @Component({
   selector: 'app-query',
   templateUrl: './query.component.html',
-  styleUrls: ['./query.component.scss']
+  styleUrls: ['./query.component.scss'],
+  providers: [QueryService]
 })
 export class QueryComponent implements OnInit {
 
-  timeRange: string;
+  begin_at: string;
+  interval: number;
   fields: string[];
   selectedFields: string[];
+  link: string;
+  loading = false;
 
-  constructor() { }
+  constructor(private service: QueryService) { }
 
   ngOnInit() {
-    this.fields = ['aaa', 'bbb', 'xxx', 'yyy'];
-    this.selectedFields = ['user_id', 'country', 'city']
+    this.begin_at = '2016-09-01T08:00';
+    this.interval = 10800;
+    this.fields = [
+      'user_properties.birthday',
+      'user_properties.acquisition_channel',
+      'user_properties.gender',
+      'user_properties.type',
+      'language',
+      'ip_address',
+      'platform',
+      'device_family',
+      'device_carrier'
+    ];
+    this.selectedFields = ['user_id', 'country', 'city', 'event_type']
   }
 
   submit(): void {
-    console.log(this.timeRange);
-    console.log(this.selectedFields);
-    console.log(this.fields);
+    this.service.query(this.begin_at, this.interval, this.selectedFields).subscribe(res => {
+      this.link = res;
+      console.log(this.link)
+    });
   }
 
   add(element: string): void {
