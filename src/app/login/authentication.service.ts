@@ -1,30 +1,47 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 import { User } from './user';
 import { environment } from '../../environments/environment';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators/catchError';
 
 @Injectable()
 export class AuthenticationService {
 
-  private url: string = `${environment.apiUrl}/users/login`;
+  private static service: AuthenticationService;
+  private url = `${environment.apiUrl}/admin_users/login`;
+  private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.user.next(JSON.parse(localStorage.getItem('currentUser')));
+    return AuthenticationService.service = AuthenticationService.service || this;
+  }
 
-  login(account: string, validator: string): Observable<User> {
-    const body = {account: account, validator: validator};
-    // return this.http.post<User>(this.url, body);
+  login(account: string, validator: string): Observable<boolean> {
+    const body = {account: account, password: validator};
+    return this.http.post<User>(this.url, body).pipe(
+      map(res => {
+        this.user.next(res);
+        return true;
+      }),
+      catchError(err => {
+        console.error(err);
+        this.user.next(null);
+        return new Observable<boolean>(observer => observer.next(false));
+      })
+    );
+  }
 
-    if (body.account == 'matthew.yang@thekono.com' && body.validator == 'qwert') {
-      return new Observable(observer => {
-        let user = new User();
-        user.account = account;
-        user.nickname = 'matthew';
-        observer.next(user)
-      });
-    } else {
-      return new Observable(obserbver => obserbver.next(null));
-    }
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.user.next(null);
+  }
+
+  getUser(): Observable<User> {
+    return this.user.asObservable();
   }
 
 }

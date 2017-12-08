@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from './authentication.service';
+import { Observable } from 'rxjs/Observable';
+import { User } from './user';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +13,11 @@ import { AuthenticationService } from './authentication.service';
 })
 export class LoginComponent implements OnInit {
 
-  private account: string;
-  private validator: string;
-  private authenticated: boolean = true;
-  private remember: boolean = false;
+  account: string;
+  validator: string;
+  authenticated = true;
+  remember = false;
+  user: Observable<User>;
 
   constructor(
     private service: AuthenticationService,
@@ -22,19 +25,27 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let loginData = JSON.parse(localStorage.getItem('loginData'));
+    const loginData = JSON.parse(localStorage.getItem('loginData'));
     if (loginData) {
       this.account = loginData.account;
       this.validator = loginData.validator;
       this.remember = loginData.remember;
     }
+
+    this.user = this.service.getUser();
+    this.user.subscribe(user => {
+      if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   login(): void {
     localStorage.removeItem('loginData');
 
     if (this.remember) {
-      let loginData = JSON.stringify({
+      const loginData = JSON.stringify({
         account: this.account, validator: this.validator, remember: this.remember
       });
       localStorage.setItem('loginData', loginData);
@@ -42,12 +53,7 @@ export class LoginComponent implements OnInit {
 
     if (this.account && this.validator) {
       this.service.login(this.account, this.validator).subscribe(res => {
-        if (this.authenticated = !!res) {
-          localStorage.setItem('currentUser', JSON.stringify(res));
-          this.router.navigate(['/']);
-        } else {
-          localStorage.removeItem('currentUser');
-        }
+        this.authenticated = res;
       });
     }
   }
