@@ -17,6 +17,7 @@ export class QueryComponent implements OnInit {
   filters: Filter[];
   link: string;
   loading = false;
+  error = false;
 
   constructor(private service: QueryService) { }
 
@@ -33,7 +34,10 @@ export class QueryComponent implements OnInit {
       'platform',
       'device_family',
       'device_carrier',
-      'city'
+      'city',
+      'session_id',
+      'amplitude_id',
+      'anonymous'
     ];
     this.selectedFields = ['user_id', 'country', 'event_type'];
     this.filterOptions = Filter.availableFields;
@@ -42,10 +46,16 @@ export class QueryComponent implements OnInit {
 
   submit(): void {
     this.loading = true;
+    this.error = false;
+    this.link = null;
     this.service.query(this.begin_at, this.interval, this.selectedFields, this.filters).subscribe(res => {
       this.link = res;
       this.loading = false;
       console.log(this.link);
+    }, err => {
+      console.log(err);
+      this.error = true;
+      this.loading = false;
     });
   }
 

@@ -13,11 +13,11 @@ import { User } from './user';
 })
 export class LoginComponent implements OnInit {
 
-  private account: string;
-  private validator: string;
-  private authenticated = true;
-  private remember = false;
-  private user: Observable<User>;
+  account: string;
+  validator: string;
+  authenticated = true;
+  remember = false;
+  user: Observable<User>;
 
   constructor(
     private service: AuthenticationService,

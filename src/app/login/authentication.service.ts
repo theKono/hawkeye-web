@@ -26,19 +26,13 @@ export class AuthenticationService {
       map(res => {
         this.user.next(res);
         return true;
+      }),
+      catchError(err => {
+        console.error(err);
+        this.user.next(null);
+        return new Observable<boolean>(observer => observer.next(false));
       })
     );
-
-    // if (body.account === 'matthew.yang@thekono.com' && body.validator === 'qwert') {
-    //   const user = new User();
-    //   user.account = account;
-    //   user.nickname = 'Matthew';
-    //   this.user.next(user);
-    //   return new Observable(observer => observer.next(true));
-    // } else {
-    //   this.user.next(null);
-    //   return new Observable(observer => observer.next(false));
-    // }
   }
 
   logout(): void {

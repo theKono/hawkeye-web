@@ -3,20 +3,26 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators/catchError';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class QueryService {
 
   private url = `${environment.apiUrl}/hawkeye_es/respond_all`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   query(begin_at: string, interval: number, fields: string[], filters: Filter[]): Observable<string> {
     const q = new Query(begin_at, interval, fields, filters);
     const query = q.to_json();
-    // console.log(query);
+
     return this.http.post(this.url, { query: query }).pipe(
-      map(res => `${environment.apiUrl}/${res['link']}`)
+      map(res => `${environment.apiUrl}/${res['link']}`),
+      catchError(err => {
+        console.log(err);
+        return new Observable<string>(oberver => oberver.error(err));
+      })
     );
     // return new Observable(observer => {
     //   observer.next(`${environment.apiUrl}/${q.begin_at}/${q.end_at}/${q.fields.length}`);
@@ -28,7 +34,8 @@ export class Filter {
 
   static availableFields = [
     'user_id', 'country', 'city', 'event_type', 'user_properties.gender',
-    'user_properties.type', 'platform', 'language'
+    'user_properties.type', 'platform', 'language', 'session_id', 'amplitude_id',
+    'anonymous'
   ];
 
   field: string;
@@ -52,7 +59,7 @@ class Query {
 
   constructor(begin_at: string, interval: number, fields: string[], filters: Filter[]) {
     this.begin_at = (new Date(begin_at).getTime()) / 1000;
-    this.end_at = this.begin_at + interval;
+    this.end_at = parseInt(this.begin_at.toString(), 10) + parseInt(interval.toString(), 10);
     this.fields = fields.concat('happened_at');
     this.filters = filters;
   }

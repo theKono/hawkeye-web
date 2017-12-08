@@ -11,7 +11,7 @@ import { AuthenticationService } from '../login/authentication.service';
 })
 export class HeaderComponent implements OnInit {
 
-  private user: User;
+  user: User;
 
   constructor(private service: AuthenticationService) { }
 

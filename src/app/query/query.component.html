@@ -4,11 +4,11 @@
   </div>
   <div class="col-md-2 col-md-push-5">
     <select class="form-control" [(ngModel)]="interval">
-      <option value="10800">3 hours</option>
-      <option value="43200">12 hours</option>
-      <option value="86400">1 day</option>
-      <option value="259200">3 days</option>
-      <option value="604800">7 days</option>
+      <option value=10800>3 hours</option>
+      <option value=43200>12 hours</option>
+      <option value=86400>1 day</option>
+      <option value=259200>3 days</option>
+      <option value=604800>7 days</option>
     </select>
   </div>
 </div>
@@ -77,6 +77,14 @@
 <hr>
 <div class="row" *ngIf="loading">
   <p>Processing...</p>
+</div>
+<div class="row" *ngIf="error">
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Oops!</strong> Something wrong!!
+  </div>
 </div>
 <div class="row" *ngIf="link">
   <span>Done! </span>
