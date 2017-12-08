@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { QueryService } from './query.service';
+import { QueryService, Filter } from './query.service';
 
 @Component({
   selector: 'app-query',
@@ -13,6 +13,8 @@ export class QueryComponent implements OnInit {
   interval: number;
   fields: string[];
   selectedFields: string[];
+  filterOptions: string[];
+  filters: Filter[];
   link: string;
   loading = false;
 
@@ -30,15 +32,20 @@ export class QueryComponent implements OnInit {
       'ip_address',
       'platform',
       'device_family',
-      'device_carrier'
+      'device_carrier',
+      'city'
     ];
-    this.selectedFields = ['user_id', 'country', 'city', 'event_type']
+    this.selectedFields = ['user_id', 'country', 'event_type'];
+    this.filterOptions = Filter.availableFields;
+    this.filters = [];
   }
 
   submit(): void {
-    this.service.query(this.begin_at, this.interval, this.selectedFields).subscribe(res => {
+    this.loading = true;
+    this.service.query(this.begin_at, this.interval, this.selectedFields, this.filters).subscribe(res => {
       this.link = res;
-      console.log(this.link)
+      this.loading = false;
+      console.log(this.link);
     });
   }
 
@@ -50,6 +57,14 @@ export class QueryComponent implements OnInit {
   remove(element: string): void {
     this.fields.push(element);
     this.selectedFields.splice(this.selectedFields.indexOf(element), 1);
+  }
+
+  addFilter(): void {
+    this.filters.push(new Filter('user_id', ''));
+  }
+
+  removeFilter(filter: Filter): void {
+    this.filters.splice(this.filters.indexOf(filter), 1);
   }
 
 }
