@@ -1,15 +1,31 @@
 <div class="row">
-  <div class="col-md-4 col-md-push-5">
-      <input type="datetime-local" class="form-control" [(ngModel)]="begin_at">
-  </div>
-  <div class="col-md-2 col-md-push-5">
-    <select class="form-control" [(ngModel)]="interval">
-      <option value=10800>3 hours</option>
-      <option value=43200>12 hours</option>
-      <option value=86400>1 day</option>
-      <option value=259200>3 days</option>
-      <option value=604800>7 days</option>
-    </select>
+  <div class="col-md-10 col-md-push-1">
+    <div class="panel panel-info">
+      <div class="panel-heading">Time</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-2"><h4 class="pull-right">From :</h4></div>
+          <div class="col-md-5">
+            <input type="datetime-local" class="form-control" [(ngModel)]="begin_at">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <h4 class="pull-right">To :</h4>
+          </div>
+          <div class="col-md-5">
+            <input type="datetime-local" class="form-control" [(ngModel)]="end_at">
+          </div>
+          <div class="col-md-5">
+            <div class="btn-droup">
+              <button class="btn btn-default" (click)="setEndAt(1)"> + 1 day</button>
+              <button class="btn btn-default" (click)="setEndAt(3)"> + 3 day</button>
+              <button class="btn btn-default" (click)="setEndAt(7)"> + 7 day</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <br>

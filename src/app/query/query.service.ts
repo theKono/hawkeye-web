@@ -13,8 +13,8 @@ export class QueryService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  query(begin_at: string, interval: number, fields: string[], filters: Filter[]): Observable<string> {
-    const q = new Query(begin_at, interval, fields, filters);
+  query(begin_at: string, end_at: string, fields: string[], filters: Filter[]): Observable<string> {
+    const q = new Query(begin_at, end_at, fields, filters);
     const query = q.to_json();
 
     return this.http.post(this.url, { query: query }).pipe(
@@ -24,9 +24,6 @@ export class QueryService {
         return new Observable<string>(oberver => oberver.error(err));
       })
     );
-    // return new Observable(observer => {
-    //   observer.next(`${environment.apiUrl}/${q.begin_at}/${q.end_at}/${q.fields.length}`);
-    // });
   }
 }
 
@@ -57,9 +54,9 @@ class Query {
   fields: string[];
   filters: Filter[];
 
-  constructor(begin_at: string, interval: number, fields: string[], filters: Filter[]) {
+  constructor(begin_at: string, end_at: string, fields: string[], filters: Filter[]) {
     this.begin_at = (new Date(begin_at).getTime()) / 1000;
-    this.end_at = parseInt(this.begin_at.toString(), 10) + parseInt(interval.toString(), 10);
+    this.end_at = (new Date(end_at).getTime()) / 1000;
     this.fields = fields.concat('happened_at');
     this.filters = filters;
   }

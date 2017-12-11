@@ -11,6 +11,7 @@ export class QueryComponent implements OnInit {
 
   begin_at: string;
   interval: number;
+  end_at: string;
   fields: string[];
   selectedFields: string[];
   filterOptions: string[];
@@ -22,7 +23,8 @@ export class QueryComponent implements OnInit {
   constructor(private service: QueryService) { }
 
   ngOnInit() {
-    this.begin_at = '2016-09-01T08:00';
+    this.begin_at = '2016-09-15T08:00';
+    this.end_at = '2016-09-16T08:00';
     this.interval = 10800;
     this.fields = [
       'user_properties.birthday',
@@ -37,23 +39,27 @@ export class QueryComponent implements OnInit {
       'city',
       'session_id',
       'amplitude_id',
-      'anonymous'
+      'anonymous',
+      'user_id',
+      'country',
+      'event_type'
     ];
-    this.selectedFields = ['user_id', 'country', 'event_type'];
+    this.selectedFields = [];
     this.filterOptions = Filter.availableFields;
     this.filters = [];
+    this.add('user_id');
+    this.add('event_type');
   }
 
   submit(): void {
     this.loading = true;
     this.error = false;
     this.link = null;
-    this.service.query(this.begin_at, this.interval, this.selectedFields, this.filters).subscribe(res => {
+    this.service.query(this.begin_at, this.end_at, this.selectedFields, this.filters).subscribe(res => {
       this.link = res;
       this.loading = false;
       console.log(this.link);
     }, err => {
-      console.log(err);
       this.error = true;
       this.loading = false;
     });
@@ -75,6 +81,13 @@ export class QueryComponent implements OnInit {
 
   removeFilter(filter: Filter): void {
     this.filters.splice(this.filters.indexOf(filter), 1);
+  }
+
+  setEndAt(days: number): void {
+    const d = new Date(this.begin_at);
+    const offset = d.getTimezoneOffset() / 60;
+    const end_date = new Date(d.getTime() + days * 86400000 - offset * 3600000);
+    this.end_at = end_date.toISOString().substring(0, 16);
   }
 
 }
