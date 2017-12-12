@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
     const loginData = JSON.parse(localStorage.getItem('loginData'));
     if (loginData) {
       this.account = loginData.account;
-      this.validator = loginData.validator;
       this.remember = loginData.remember;
     }
 
@@ -45,9 +44,7 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem('loginData');
 
     if (this.remember) {
-      const loginData = JSON.stringify({
-        account: this.account, validator: this.validator, remember: this.remember
-      });
+      const loginData = JSON.stringify({account: this.account, remember: this.remember});
       localStorage.setItem('loginData', loginData);
     }
 
