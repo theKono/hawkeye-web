@@ -5,6 +5,10 @@
 /tmp
 /out-tsc
 
+# deployment
+/staging/s3_website.yml
+/production/s3_website.yml
+
 # dependencies
 /node_modules
 
